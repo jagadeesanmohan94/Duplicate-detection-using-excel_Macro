@@ -1,5 +1,51 @@
 # Duplicate-detection-using-Macro
 
+
+SOP: Possible Duplicate Detection in Master Dump (Excel)
+Purpose: Identify and extract possible duplicate cases in the Master Dump using parameter-based concatenation, Finding flags, and VLOOKUP checks, automated through a VBA macro.
+Scope: Excel datasets that contain a Parameter column (concatenated key), a Finding column (duplicate flag), and an Actual Invoice Number.
+Audience: Process Leads / Analysts performing duplicate analysis.
+Prerequisites
+•	Excel 2016 or later (or Microsoft 365) with macros enabled (.xlsm).
+•	A worksheet containing the Master Dump with header row.
+•	Column headers available/confirmed: one or more Parameter columns (e.g., Parameter1..Parameter6), a Finding column, and an Actual Invoice Number column.
+•	Basic familiarity with running macros (Developer tab → Macros).
+Inputs & Outputs
+Input: Master Dump worksheet with required columns.
+Outputs: (1) 'PossibleDuplicates' sheet containing accumulated duplicate cases across all parameters; (2) optional 'TempLookup' sheet used internally by the macro.
+High-Level Workflow
+1.	Concatenate fields into the Parameter column(s) and convert to values.
+2.	Sort by the Parameter column.
+3.	Compute the Finding flag (mark duplicate candidates with 'a').
+4.	Bring all 'a' rows to the top and copy their Parameter values to a temporary sheet.
+5.	Apply VLOOKUP from Master Dump to the temporary list; paste results as values.
+6.	Sort by the VLOOKUP column and Actual Invoice Number.
+7.	Delete #N/A rows; remaining rows are potential duplicates for that parameter.
+8.	Append them to the output sheet. Repeat for all parameters.
+9.	Insert separator rows between distinct duplicate cases in the final output.
+Detailed Steps (Manual Reference)
+10.	In the Parameter column, concatenate the relevant fields per business logic. Convert formulas to values (Paste Special → Values).
+11.	Sort the Master Dump by Parameter (ascending).
+12.	In the Finding column, use a formula to mark duplicate candidates with 'a' (e.g., IF(COUNTIF(ParameterRange, ParameterValue)>1, 'a', '')).
+13.	Sort by Finding so that 'a' rows appear on top. Copy their Parameter values to a new sheet (TempLookup).
+14.	Next to the Parameter column in Master Dump, use VLOOKUP against TempLookup and paste values.
+15.	Sort by the VLOOKUP column, then by Actual Invoice Number.
+16.	Delete rows with #N/A in the VLOOKUP column. The remaining rows are possible duplicates for this parameter.
+17.	Copy the resulting rows to the PossibleDuplicates output sheet.
+18.	Repeat for all six parameters.
+19.	Finally, insert separator rows between duplicate pairs/cases for clarity in analysis.
+Quality Checks & Tips
+•	Confirm that Parameter columns are values (no volatile formulas remain).
+•	Ensure Finding logic truly reflects a 'duplicate candidate' (adjust as needed).
+•	If VLOOKUP returns unexpected #N/A values, verify that TempLookup includes all 'a' parameters and that there are no leading/trailing spaces.
+•	After appending to PossibleDuplicates, verify counts per parameter against expectations.
+•	Use Text-to-Columns/Trim in Excel for cleaning data if discrepancies appear.
+Version & Ownership
+Version: 1.0 (Generated)
+Owner: Process Lead
+
+
+
 Process to Identify Possible Duplicate Cases
 
 1. Concatenate fields in the Parameter column of the Master Dump according to the specified logic.
